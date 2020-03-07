@@ -141,18 +141,18 @@
             .Columns(columns =>
             {
 
-                columns.Bound(c => c.Name).Title($"{OnlineContactsResources.Name}");
+                columns.Bound(c => c.Name).Title(OnlineContactsResources.Name);
 
 
 
-                columns.Bound(c => c.Phone).Title($"{OnlineContactsResources.Phone}");
-                columns.Bound(c => c.Address).Title($"{OnlineContactsResources.Address}");
+                columns.Bound(c => c.Phone).Title(OnlineContactsResources.Phone);
+                columns.Bound(c => c.Address).Title(OnlineContactsResources.Address);
 
                 columns.Command(Command =>
                 {
 
-                    Command.Custom("DeleteRow").Click("DeleteRow").HtmlAttributes(new { id = "#=data.Id#", style = "text-align:center;" }).Text($"<span class='fa fa-trash-alt'>  {OnlineContactsResources.DeleteHeader}</span>").SendDataKeys(true);
-                    Command.Custom("EditRow").Click("EditRow").HtmlAttributes(new { id = "#=data.Id#", style = "text-align:center;" }).Text($"<span class='fa fa-edit'>  {OnlineContactsResources.EditedHeader}</span>").SendDataKeys(true);
+                    Command.Custom("DeleteRow").Click("DeleteRow").HtmlAttributes(new { id = "#=data.Id#", style = "text-align:center;" }).Text("<span class='fa fa-trash-alt'>  "+OnlineContactsResources.DeleteHeader+"</span>").SendDataKeys(true);
+                    Command.Custom("EditRow").Click("EditRow").HtmlAttributes(new { id = "#=data.Id#", style = "text-align:center;" }).Text("<span class='fa fa-edit'>  "+OnlineContactsResources.EditedHeader+"</span>").SendDataKeys(true);
 
 
                 }).Width(190).Title("Actions").HtmlAttributes(new { tabindex = "-1", style = "text-align:center;" });
