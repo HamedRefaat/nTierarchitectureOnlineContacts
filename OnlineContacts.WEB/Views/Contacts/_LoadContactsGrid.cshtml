@@ -1,0 +1,182 @@
+﻿@using OnlineContacts.shared.Enums
+@using OnlineContacts.shared.Helper
+@using Kendo.Mvc.UI
+@using OnlineContacts.shared.Resources
+
+<script>
+     function DeleteRow(e) {
+         debugger;
+         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+
+         if (LockedContacts.indexOf(dataItem.Id) > -1) {
+             var _title = '@OnlineContactsResources.LockedHeader';
+             var _message = '@OnlineContactsResources.LockedMsg';
+             var _type = '@MessageType.warning';
+
+             Swal.fire(
+                 _title,
+                 _message,
+                 _type
+             );
+
+         }
+         else {
+
+
+
+
+
+             Swal.fire({
+                 title: '@OnlineContactsResources.DeleteConfirmationMsg',
+                 text: "@OnlineContactsResources.CanotReturnBack",
+                 icon: 'warning',
+                 showCancelButton: true,
+                 confirmButtonColor: '#3085d6',
+                 cancelButtonColor: '#d33',
+                 confirmButtonText: 'Yes, delete it!'
+             }).then((result) => {
+                 if (result.value) {
+                     DeleteContact(dataItem.Id);
+                 }
+             })
+
+         }
+     }
+
+     function EditRow(e) {
+         debugger;
+         var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+
+         if (LockedContacts.indexOf(dataItem.Id) > -1) {
+             var _title = '@OnlineContactsResources.LockedHeader';
+             var _message = '@OnlineContactsResources.LockedMsg';
+             var _type = '@MessageType.warning';
+
+             Swal.fire(
+                 _title,
+                 _message,
+                 _type
+             );
+
+         }
+         else {
+             EditContact(dataItem.Id);
+         }
+     }
+
+    function DeleteContact(_Id) {
+         var _url = '@Url.Action("Delete")';
+
+         $.ajax({
+             type: "GET",
+             url: _url,
+             data: { Id : _Id },
+             success: DeltedSuccessed,
+             error: DeleteFaild,
+
+         });
+
+     }
+
+
+
+     function DeltedSuccessed(res) {
+
+         var _title="";
+         var _message="";
+         var _type="";
+
+         if (res.success) {
+             _title =  '@OnlineContactsResources.DeleteHeader',
+             _message = '@OnlineContactsResources.DeleteSucessMsg',
+             _type =    '@MessageType.success';
+
+
+
+             RefreshGrid("ContactsGrid");
+         }
+         else {
+             _title =  '@OnlineContactsResources.ErrorHeader',
+             _message = '@OnlineContactsResources.ErrorMsg',
+             _type =    '@MessageType.error';
+         }
+
+         Swal.fire(
+             _title,
+             _message,
+             _type
+         );
+     }
+
+     function DeleteFaild(res) {
+         var _title = '@OnlineContactsResources.ErrorHeader';
+         var _message = '@OnlineContactsResources.ErrorMsg';
+         var    _type =    '@MessageType.error';
+
+        Swal.fire(
+            _title,
+            _message,
+            _type
+        );
+     }
+
+    function EditContact(Id) {
+             var _url = '@Url.Action("_ContactInfo", new { Id = "-1"})';
+             _url = _url.replace("-1", Id);
+         $("#ContactInfo").empty().load(_url);
+
+    }
+
+    function ContactGridRequestEnd(e) {
+        LockedContacts = [];
+    }
+</script>
+
+
+
+
+@(Html.Kendo().Grid<OnlineContacts.shared.DTOs.ContactDTO>()
+            .Name("ContactsGrid")
+            .Columns(columns =>
+            {
+
+                columns.Bound(c => c.Name).Title($"{OnlineContactsResources.Name}");
+
+
+
+                columns.Bound(c => c.Phone).Title($"{OnlineContactsResources.Phone}");
+                columns.Bound(c => c.Address).Title($"{OnlineContactsResources.Address}");
+
+                columns.Command(Command =>
+                {
+
+                    Command.Custom("DeleteRow").Click("DeleteRow").HtmlAttributes(new { id = "#=data.Id#", style = "text-align:center;" }).Text($"<span class='fa fa-trash-alt'>  {OnlineContactsResources.DeleteHeader}</span>").SendDataKeys(true);
+                    Command.Custom("EditRow").Click("EditRow").HtmlAttributes(new { id = "#=data.Id#", style = "text-align:center;" }).Text($"<span class='fa fa-edit'>  {OnlineContactsResources.EditedHeader}</span>").SendDataKeys(true);
+
+
+                }).Width(190).Title("Actions").HtmlAttributes(new { tabindex = "-1", style = "text-align:center;" });
+
+            })
+            
+             .HtmlAttributes(new { @class = "gridscroll smallgrid" })
+              .Sortable()
+              .Selectable(s => s.Mode(GridSelectionMode.Single))
+          
+              .Pageable(pageable => pageable
+                 .Refresh(true)
+                 .PageSizes(true)
+                 .ButtonCount(5))
+                .Filterable(d => d.Enabled(true))
+              .DataSource(dataSource => dataSource
+              .Ajax()
+              .Events(e => e.RequestEnd("ContactGridRequestEnd"))
+              .Read(read => read.Action("Contacts_Read", "Contacts"))
+              .PageSize(5)
+              .ServerOperation(true)
+              .Sort(sort => sort.Add("CreatedDate").Descending())
+
+
+        )
+)
+

@@ -1,0 +1,42 @@
+﻿@using OnlineContacts.shared.Resources
+@model OnlineContacts.Models.Identity.RegisterViewModel
+@{
+    ViewBag.Title = $"{OnlineContactsResources.Register}";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group">
+       
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = OnlineContactsResources.Email })
+        </div>
+    </div>
+    <div class="form-group">
+      
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" ,placeholder= OnlineContactsResources.Password })
+        </div>
+    </div>
+    <div class="form-group">
+     
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = OnlineContactsResources.ConfirmPass })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="@OnlineContactsResources.Register" />
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

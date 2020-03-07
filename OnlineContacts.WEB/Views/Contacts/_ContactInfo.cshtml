@@ -1,0 +1,161 @@
+﻿@using OnlineContacts.shared.Enums
+@using OnlineContacts.shared.Helper
+@using OnlineContacts.shared.Resources
+
+@model OnlineContacts.shared.DTOs.ContactDTO
+
+<script>
+    function OnBegin() {
+        //TODo: add loader
+    }
+    function OnSuccess(res) {
+        debugger;
+    var _message = "";
+        var _type = "";
+        var _title = "";
+        if (res.Success) {
+
+            debugger;
+          
+            _type = '@MessageType.success';
+
+            if (res.Mode == '@OperationMode.Add') {
+                $("#Id").val(res._Id);
+                _message = '@OnlineContactsResources.AddedSucessMsg';
+                _title = '@OnlineContactsResources.AdeddHeader';
+            }
+            else {
+                _message = '@OnlineContactsResources.EditSucessMsg';
+                _title = '@OnlineContactsResources.EditedHeader';
+                mainHub.server.lockContact(res._Id);
+               
+            }
+            RefreshGrid("ContactsGrid");
+            ResetForm();
+        }
+        else {
+
+            debugger;
+            for (Key in res.Errors) {
+                $("#" + Key + "_validationMessage").show();
+                $("#" + Key + "_validationMessage").val(res.Errors[Key]);
+            }
+
+            _message = '@OnlineContactsResources.ErrorMsg';
+            _title =  '@OnlineContactsResources.ErrorHeader';
+            _type =   '@MessageType.error';
+        }
+
+        Swal.fire(
+            _title,
+            _message,
+            _type
+        );
+    }
+
+    var OnFailure = function (res) {
+
+            _message = '@OnlineContactsResources.ErrorMsg';
+            _title =  '@OnlineContactsResources.ErrorHeader';
+            _type =   '@MessageType.error';
+
+        for (Key in res.Errors) {
+            $("#" + Key + "_validationMessage").show();
+            $("#" + Key + "_validationMessage").val(res.Errors[Key]);
+        }
+
+
+        Swal.fire(
+            _title,
+            _message,
+            _type
+        );
+    }
+    function ResetForm() {
+        $("#Id").val(0);
+        $("#Name").val(null);
+        $("#Phone").val(null);
+        $("#Address").val(null);
+        $("#Notes").val(null);
+
+    }
+
+</script>
+
+<div class="form-group">
+
+
+
+
+
+    @using (Ajax.BeginForm("CreateOrEditContact", "Contacts", new AjaxOptions()
+    {
+
+        HttpMethod = "POST",
+        OnBegin = "OnBegin",
+        OnSuccess = "OnSuccess",
+        OnFailure = "OnFailure",
+
+    }, new { @id = "CreateOrEditContact", enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(d => d.Id)
+        @Html.AntiForgeryToken();
+
+        <div class="form-group">
+            
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = OnlineContactsResources.Name })
+                @Html.ValidationMessageFor(m => m.Name)
+            </div>
+        </div>
+
+        <div class="form-group">
+            
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = OnlineContactsResources.Phone, type = "number", maxlength = "12" })
+                @Html.ValidationMessageFor(m => m.Phone)
+               
+            </div>
+          
+        </div>
+        
+        <div class="form-group">
+            
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = OnlineContactsResources.Address })
+                @Html.ValidationMessageFor(m => m.Address)
+            </div>
+        </div>
+
+        <div class="form-group">
+          
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.Notes, new { @class = "form-control", placeholder = OnlineContactsResources.Notes })
+                @Html.ValidationMessageFor(m => m.Notes)
+            </div>
+        </div>
+
+
+
+
+
+    }
+
+
+    <div class="form-group">
+        <div class="col-md-12">
+            <input type="button" onclick="javascript:Save();" class="btn btn-default" value="@OnlineContacts.shared.Resources.OnlineContactsResources.Save" />
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<script>
+    function Save() {
+        $("#CreateOrEditContact").kendoValidator();
+        $("#CreateOrEditContact").submit();
+    }
+</script>

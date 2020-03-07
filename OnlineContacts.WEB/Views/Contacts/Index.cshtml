@@ -1,0 +1,61 @@
+﻿@using OnlineContacts.shared.Resources
+@{
+    ViewBag.Title = $"{OnlineContactsResources.Contacts}";
+}
+
+<div class="row" id="ContactInfo">
+
+
+    @Html.Action("_ContactInfo")
+
+</div>
+
+<div class="row">
+
+    @Html.Partial("_LoadContactsGrid")
+
+</div>
+
+<script src="~/Scripts/jquery.signalR-2.2.2.min.js"></script>
+<script src="/signalr/hubs"></script>
+<script>
+
+    var LockedContacts = []; 
+    // declare tha chathb
+    var mainHub
+    $(document).ready(function () {
+        //assign the chat hub to our mainHub class
+        mainHub = $.connection.mainHub;
+
+
+        //subscripe on the onNewUserConnected event so when a user connect the hub the assigend function will fire
+        // that's the use of the SignalR js proxy
+        mainHub.client.fireLockContact = function (ConnectId) {
+            LockedContacts.push(ConnectId);
+        }
+
+
+        $.connection.hub.start().done(function () {
+
+            
+        });
+
+
+    });
+
+
+</script>
+
+
+
+<script>
+
+    function RefreshGrid(GridName) {
+
+        var GridName = $("#" + GridName);
+        GridName.data("kendoGrid").dataSource.read();
+        GridName.data("kendoGrid").refresh();
+    }
+
+</script>
+

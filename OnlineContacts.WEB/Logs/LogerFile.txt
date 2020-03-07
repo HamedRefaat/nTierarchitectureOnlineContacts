@@ -1,0 +1,9 @@
+﻿2020-03-07 19:38:53.5218 * Value cannot be null.
+Parameter name: entity
+2020-03-07 19:38:57.8594 * Value cannot be null.
+Parameter name: entity
+2020-03-07 19:39:01.6398 * Value cannot be null.
+Parameter name: entity
+2020-03-07 19:39:04.7879 * Value cannot be null.
+Parameter name: entity
+2020-03-07 19:53:46.5978 * Validation failed for one or more entities. See 'EntityValidationErrors' property for more details.
