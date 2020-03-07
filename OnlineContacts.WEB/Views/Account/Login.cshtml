@@ -2,7 +2,7 @@
 @using OnlineContacts.shared.Resources
 @model LoginViewModel
 @{
-    ViewBag.Title = $"{OnlineContactsResources.LogIn}";
+    ViewBag.Title = OnlineContactsResources.LogIn;
 }
 
 <h2>@ViewBag.Title.</h2>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <p>
-                    @Html.ActionLink($"{OnlineContactsResources.RegisterNewUser}", "Register")
+                    @Html.ActionLink(OnlineContactsResources.RegisterNewUser, "Register")
                 </p>
                 @* Enable this once you have account confirmation enabled for password reset functionality
                     <p>

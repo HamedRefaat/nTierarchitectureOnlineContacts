@@ -137,46 +137,46 @@
 
 
 @(Html.Kendo().Grid<OnlineContacts.shared.DTOs.ContactDTO>()
-            .Name("ContactsGrid")
-            .Columns(columns =>
-            {
-
-                columns.Bound(c => c.Name).Title(OnlineContactsResources.Name);
-
-
-
-                columns.Bound(c => c.Phone).Title(OnlineContactsResources.Phone);
-                columns.Bound(c => c.Address).Title(OnlineContactsResources.Address);
-
-                columns.Command(Command =>
+                .Name("ContactsGrid")
+                .Columns(columns =>
                 {
 
-                    Command.Custom("DeleteRow").Click("DeleteRow").HtmlAttributes(new { id = "#=data.Id#", style = "text-align:center;" }).Text("<span class='fa fa-trash-alt'>  "+OnlineContactsResources.DeleteHeader+"</span>").SendDataKeys(true);
-                    Command.Custom("EditRow").Click("EditRow").HtmlAttributes(new { id = "#=data.Id#", style = "text-align:center;" }).Text("<span class='fa fa-edit'>  "+OnlineContactsResources.EditedHeader+"</span>").SendDataKeys(true);
+                    columns.Bound(c => c.Name).Title(OnlineContactsResources.Name);
 
 
-                }).Width(190).Title("Actions").HtmlAttributes(new { tabindex = "-1", style = "text-align:center;" });
 
-            })
-            
-             .HtmlAttributes(new { @class = "gridscroll smallgrid" })
-              .Sortable()
-              .Selectable(s => s.Mode(GridSelectionMode.Single))
-          
-              .Pageable(pageable => pageable
-                 .Refresh(true)
-                 .PageSizes(true)
-                 .ButtonCount(5))
-                .Filterable(d => d.Enabled(true))
-              .DataSource(dataSource => dataSource
-              .Ajax()
-              .Events(e => e.RequestEnd("ContactGridRequestEnd"))
-              .Read(read => read.Action("Contacts_Read", "Contacts"))
-              .PageSize(5)
-              .ServerOperation(true)
-              .Sort(sort => sort.Add("CreatedDate").Descending())
+                    columns.Bound(c => c.Phone).Title(OnlineContactsResources.Phone);
+                    columns.Bound(c => c.Address).Title(OnlineContactsResources.Address);
+
+                    columns.Command(Command =>
+                    {
+
+                        Command.Custom("DeleteRow").Click("DeleteRow").HtmlAttributes(new { id = "#=data.Id#", style = "text-align:center;" }).Text("<span class='fa fa-trash-alt'>  " + OnlineContactsResources.DeleteHeader + "</span>").SendDataKeys(true);
+                        Command.Custom("EditRow").Click("EditRow").HtmlAttributes(new { id = "#=data.Id#", style = "text-align:center;" }).Text("<span class='fa fa-edit'>  " + OnlineContactsResources.EditedHeader + "</span>").SendDataKeys(true);
 
 
-        )
+                    }).Width(190).Title("Actions").HtmlAttributes(new { tabindex = "-1", style = "text-align:center;" });
+
+                })
+
+                 .HtmlAttributes(new { @class = "gridscroll smallgrid" })
+                  .Sortable()
+                  .Selectable(s => s.Mode(GridSelectionMode.Single))
+
+                  .Pageable(pageable => pageable
+                     .Refresh(true)
+                     .PageSizes(true)
+                     .ButtonCount(5))
+                    .Filterable(d => d.Enabled(true))
+                  .DataSource(dataSource => dataSource
+                  .Ajax()
+                  .Events(e => e.RequestEnd("ContactGridRequestEnd"))
+                  .Read(read => read.Action("Contacts_Read", "Contacts"))
+                  .PageSize(5)
+                  .ServerOperation(true)
+                  .Sort(sort => sort.Add("CreatedDate").Descending())
+
+
+            )
 )
 
